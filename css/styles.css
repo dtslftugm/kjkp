@@ -4,7 +4,7 @@
    Font: Inter (Google Fonts)
    ================================================================ */
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
 
 /* ----------------------------------------------------------------
    CSS VARIABLES / DESIGN TOKENS
@@ -24,10 +24,14 @@
   --text-secondary: #8b949e;
   --text-muted: #484f58;
 
-  /* Accent */
-  --accent: #3b82f6;
-  --accent-glow: rgba(59, 130, 246, 0.3);
-  --accent-light: rgba(59, 130, 246, 0.12);
+  /* Accent - UGM Branding */
+  --accent: #1e3a5f;
+  /* Biru UGM Dark Theme Equivalent */
+  --accent-glow: rgba(30, 58, 95, 0.5);
+  --accent-light: rgba(30, 58, 95, 0.2);
+
+  --accent-yellow: #f2c94c;
+  /* Kuning UGM Accent */
 
   /* Urgensi / Badge */
   --merah: #ef4444;
@@ -82,8 +86,8 @@
   --text-secondary: #4b5563;
   --text-muted: #6b7280;
 
-  --accent-glow: rgba(59, 130, 246, 0.2);
-  --accent-light: rgba(59, 130, 246, 0.1);
+  --accent-glow: rgba(30, 77, 133, 0.2);
+  --accent-light: rgba(30, 77, 133, 0.1);
 
   --merah-bg: rgba(239, 68, 68, 0.1);
   --kuning-bg: rgba(245, 158, 11, 0.1);
@@ -110,15 +114,15 @@ html {
 }
 
 body {
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-family: 'Open Sans', system-ui, -apple-system, sans-serif;
   background-color: var(--bg-base);
   background-image:
-    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(59, 130, 246, 0.15) 0%, transparent 60%),
-    radial-gradient(ellipse 60% 40% at 80% 90%, rgba(99, 102, 241, 0.08) 0%, transparent 50%);
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(30, 58, 95, 0.2) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 80% 90%, rgba(30, 58, 95, 0.15) 0%, transparent 50%);
   background-attachment: fixed;
   color: var(--text-primary);
   min-height: 100vh;
-  line-height: 1.6;
+  line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   transition: background-color 0.3s var(--ease), color 0.3s var(--ease);
 }
@@ -126,8 +130,8 @@ body {
 [data-theme="light"] body,
 [data-theme="light"].body {
   background-image:
-    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(59, 130, 246, 0.07) 0%, transparent 60%),
-    radial-gradient(ellipse 60% 40% at 80% 90%, rgba(99, 102, 241, 0.04) 0%, transparent 50%);
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(30, 77, 133, 0.08) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 80% 90%, rgba(30, 77, 133, 0.05) 0%, transparent 50%);
 }
 
 a {
@@ -183,14 +187,14 @@ button {
 }
 
 .header-text h1 {
-  font-size: 1.1rem;
+  font-size: 1.125rem;
   font-weight: 700;
   color: var(--text-primary);
   letter-spacing: -0.01em;
 }
 
 .header-text p {
-  font-size: 0.73rem;
+  font-size: 0.875rem;
   color: var(--text-secondary);
   font-weight: 400;
 }
@@ -200,7 +204,7 @@ button {
   display: flex;
   align-items: center;
   gap: 6px;
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   color: var(--text-muted);
 }
 
@@ -240,9 +244,9 @@ button {
 }
 
 .page-title h2 {
-  font-size: 1.6rem;
-  font-weight: 800;
-  letter-spacing: -0.03em;
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
   background: linear-gradient(135deg, #e6edf3 0%, #8b949e 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -250,7 +254,8 @@ button {
 }
 
 [data-theme="light"] .page-title h2 {
-  background: linear-gradient(135deg, #1e3a5f 0%, #2563eb 100%);
+  /* Biru UGM ke biru agak muda */
+  background: linear-gradient(135deg, #1e3a5f 0%, #30588c 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -259,7 +264,7 @@ button {
 .page-title p {
   margin-top: 4px;
   color: var(--text-secondary);
-  font-size: 0.88rem;
+  font-size: 0.875rem;
 }
 
 /* ----------------------------------------------------------------
@@ -286,18 +291,18 @@ button {
 }
 
 .stat-card .label {
-  font-size: 0.7rem;
+  font-size: 0.875rem;
   font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.05em;
   color: var(--text-secondary);
   margin-bottom: 6px;
 }
 
 .stat-card .value {
   font-size: 2rem;
-  font-weight: 800;
-  letter-spacing: -0.04em;
+  font-weight: 700;
+  letter-spacing: -0.02em;
   line-height: 1;
 }
 
@@ -359,7 +364,7 @@ button {
   border-radius: var(--radius-md);
   color: var(--text-primary);
   padding: 9px 12px 9px 36px;
-  font-size: 0.85rem;
+  font-size: 0.875rem;
   font-family: inherit;
   transition: border-color var(--dur) var(--ease), box-shadow var(--dur) var(--ease), background var(--dur) var(--ease);
 }
@@ -387,9 +392,9 @@ button {
 }
 
 .chip-label {
-  font-size: 0.72rem;
+  font-size: 0.875rem;
   color: var(--text-secondary);
-  font-weight: 500;
+  font-weight: 600;
   white-space: nowrap;
   margin-right: 2px;
 }
@@ -399,9 +404,9 @@ button {
   border: 1px solid var(--border);
   border-radius: 999px;
   color: var(--text-secondary);
-  padding: 5px 13px;
-  font-size: 0.78rem;
-  font-weight: 500;
+  padding: 6px 14px;
+  font-size: 0.875rem;
+  font-weight: 600;
   transition: all var(--dur) var(--ease);
   white-space: nowrap;
 }
@@ -445,7 +450,7 @@ button {
 }
 
 .table-meta .count {
-  font-size: 0.8rem;
+  font-size: 0.875rem;
   color: var(--text-secondary);
 }
 
@@ -460,18 +465,18 @@ button {
 table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 0.82rem;
+  font-size: 0.875rem;
 }
 
 thead tr {
-  border-bottom: 1px solid var(--border-strong);
+  border-bottom: 2px solid var(--border-strong);
 }
 
 th {
   padding: 12px 16px;
   text-align: left;
-  font-size: 0.72rem;
-  font-weight: 600;
+  font-size: 0.875rem;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: var(--text-secondary);
@@ -533,7 +538,7 @@ td.text-muted {
 }
 
 td.text-sm {
-  font-size: 0.76rem;
+  font-size: 0.875rem;
 }
 
 /* Column widths */
@@ -552,8 +557,9 @@ td.text-sm {
 
 .col-nip {
   min-width: 160px;
-  font-size: 0.76rem;
-  font-family: 'Courier New', monospace;
+  font-family: inherit;
+  /* Supaya konsisten */
+  font-size: 0.875rem;
 }
 
 .col-lahir {
@@ -580,7 +586,7 @@ td.text-sm {
 /* Row number */
 td.col-no {
   color: var(--text-muted);
-  font-size: 0.74rem;
+  font-size: 0.875rem;
   text-align: center;
 }
 
@@ -590,7 +596,7 @@ td.col-no {
 }
 
 .nama-wrap .sub {
-  font-size: 0.72rem;
+  font-size: 0.75rem;
   color: var(--text-secondary);
   margin-top: 1px;
 }
@@ -604,7 +610,7 @@ td.col-no {
   gap: 5px;
   padding: 4px 10px;
   border-radius: 999px;
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   font-weight: 600;
   letter-spacing: 0.02em;
   white-space: nowrap;
@@ -672,30 +678,31 @@ td.col-no {
 .badge-tipe {
   padding: 3px 8px;
   border-radius: var(--radius-sm);
-  font-size: 0.67rem;
+  font-size: 0.75rem;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.05em;
 }
 
 .badge-tipe.dosen {
   background: var(--accent-light);
   color: var(--accent);
-  border: 1px solid rgba(59, 130, 246, 0.25);
+  border: 1px solid var(--accent);
 }
 
 .badge-tipe.tendik {
-  background: rgba(168, 85, 247, 0.12);
-  color: #a855f7;
-  border: 1px solid rgba(168, 85, 247, 0.25);
+  background: rgba(242, 201, 76, 0.15);
+  /* Kuning UGM ringan */
+  color: #b78a08;
+  border: 1px solid #d4a008;
 }
 
 /* ----------------------------------------------------------------
    SISA WAKTU
    ---------------------------------------------------------------- */
 .sisa-waktu {
-  font-size: 0.8rem;
-  font-weight: 500;
+  font-size: 0.875rem;
+  font-weight: 600;
   line-height: 1.4;
 }
 
@@ -768,7 +775,7 @@ td.col-no {
 .site-footer {
   border-top: 1px solid var(--border);
   padding: 20px 0;
-  font-size: 0.75rem;
+  font-size: 0.875rem;
   color: var(--text-muted);
 }
 
@@ -792,7 +799,7 @@ td.col-no {
   flex-wrap: wrap;
   gap: 10px;
   align-items: center;
-  font-size: 0.74rem;
+  font-size: 0.875rem;
   color: var(--text-secondary);
 }
 
@@ -821,8 +828,8 @@ td.col-no {
   border-radius: 999px;
   color: var(--text-secondary);
   padding: 5px 12px 5px 8px;
-  font-size: 0.75rem;
-  font-weight: 500;
+  font-size: 0.875rem;
+  font-weight: 600;
   cursor: pointer;
   transition: all var(--dur) var(--ease);
   white-space: nowrap;

@@ -324,7 +324,14 @@
           if (q) {
             var haystack = [r.nama, r.nip, r.jabatan_fungsional, r.gol, r.inisial, r.homebase]
               .join(' ').toLowerCase();
-            if (haystack.indexOf(q) === -1) return false;
+
+            // Pencarian tokenized (memecah query berdasarkan spasi)
+            var terms = q.split(/\s+/);
+            var isMatch = terms.every(function (term) {
+              return haystack.indexOf(term) !== -1;
+            });
+
+            if (!isMatch) return false;
           }
 
           return true;
