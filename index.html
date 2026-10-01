@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard KJKP – DTSL FT UGM</title>
+  <meta name="description"
+    content="Dashboard pemantauan staf Dosen dan Tendik yang akan segera purna tugas / pensiun – DTSL FT UGM" />
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/styles.css" />
+
+  <!-- Feather Icons (CDN) -->
+  <script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
+</head>
+
+<body>
+
+  <!-- ============================================================
+       HEADER
+       ============================================================ -->
+  <header class="site-header">
+    <div class="container">
+      <div class="header-inner">
+        <img src="assets/logo-dtsl.png" alt="Logo DTSL FT UGM" class="header-logo"
+          onerror="this.style.display='none'" />
+        <div class="header-text">
+          <h1>Dashboard KJKP DTSL</h1>
+          <p>Departemen Teknik Sipil dan Lingkungan – Fakultas Teknik UGM</p>
+        </div>
+        <div class="header-badge">
+          <span class="dot"></span>
+          <span id="header-status">Memuat data…</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ============================================================
+       MAIN
+       ============================================================ -->
+  <main class="main-content">
+    <div class="container">
+
+      <!-- Page title -->
+      <div class="page-title">
+        <h2>Informasi Purna Tugas</h2>
+        <p>Daftar Dosen dan Tenaga Kependidikan yang akan memasuki masa pensiun</p>
+      </div>
+
+      <!-- Stats Cards -->
+      <div class="stats-grid" id="stats-grid">
+        <div class="stat-card merah">
+          <div class="label">≤ 6 Bulan</div>
+          <div class="value" id="stat-merah">–</div>
+        </div>
+        <div class="stat-card kuning">
+          <div class="label">≤ 12 Bulan</div>
+          <div class="value" id="stat-kuning">–</div>
+        </div>
+        <div class="stat-card oranye">
+          <div class="label">≤ 24 Bulan</div>
+          <div class="value" id="stat-oranye">–</div>
+        </div>
+        <div class="stat-card hijau">
+          <div class="label">> 24 Bulan</div>
+          <div class="value" id="stat-hijau">–</div>
+        </div>
+        <div class="stat-card total">
+          <div class="label">Total Ditampilkan</div>
+          <div class="value" id="stat-total">–</div>
+        </div>
+      </div>
+
+      <!-- Filter Bar -->
+      <div class="filter-bar">
+
+        <!-- Search -->
+        <div class="search-wrap">
+          <span class="icon" data-feather="search"></span>
+          <input type="text" id="search-input" class="search-input" placeholder="Cari nama, NIP, jabatan…"
+            autocomplete="off" />
+        </div>
+
+        <!-- Filter Kategori -->
+        <div class="chip-group">
+          <span class="chip-label">Kategori</span>
+          <button class="chip active" data-filter="kategori" data-value="semua">Semua</button>
+          <button class="chip" data-filter="kategori" data-value="dosen">Dosen</button>
+          <button class="chip" data-filter="kategori" data-value="tendik">Tendik</button>
+        </div>
+
+        <!-- Filter Rentang Waktu -->
+        <div class="chip-group">
+          <span class="chip-label">Sisa Waktu</span>
+          <button class="chip" data-filter="waktu" data-value="semua">Semua</button>
+          <button class="chip" data-filter="waktu" data-value="6">≤ 6 bln</button>
+          <button class="chip active" data-filter="waktu" data-value="12">≤ 12 bln</button>
+          <button class="chip" data-filter="waktu" data-value="24">≤ 24 bln</button>
+        </div>
+
+      </div>
+
+      <!-- Keterangan Warna -->
+      <div class="legend" style="margin-bottom:14px;">
+        <span style="font-size:0.72rem; color:var(--text-muted); font-weight:500;">Keterangan:</span>
+        <span class="legend-item"><span class="legend-dot" style="background:var(--merah)"></span> ≤ 6 bulan</span>
+        <span class="legend-item"><span class="legend-dot" style="background:var(--kuning)"></span> ≤ 12 bulan</span>
+        <span class="legend-item"><span class="legend-dot" style="background:var(--oranye)"></span> ≤ 24 bulan</span>
+        <span class="legend-item"><span class="legend-dot" style="background:var(--hijau)"></span> > 24 bulan</span>
+      </div>
+
+      <!-- Tabel -->
+      <div class="table-wrapper">
+        <div class="table-meta">
+          <span class="count">Menampilkan <strong id="row-count">0</strong> data</span>
+          <span id="last-updated"></span>
+        </div>
+        <div class="table-scroll">
+          <table id="main-table">
+            <thead>
+              <tr>
+                <th class="col-no">#</th>
+                <th class="col-nama sortable" data-col="nama">
+                  Nama <span class="sort-icon"></span>
+                </th>
+                <th class="col-tipe sortable" data-col="tipe">
+                  Tipe <span class="sort-icon"></span>
+                </th>
+                <th class="col-jabgol sortable" data-col="jabgol">
+                  Gol / Jabatan <span class="sort-icon"></span>
+                </th>
+                <th class="col-nip sortable" data-col="nip">
+                  NIP <span class="sort-icon"></span>
+                </th>
+                <th class="col-lahir sortable" data-col="tgl_lahir">
+                  Tgl Lahir <span class="sort-icon"></span>
+                </th>
+                <th class="col-pensiun sortable" data-col="tgl_pensiun">
+                  Tgl Pensiun <span class="sort-icon"></span>
+                </th>
+                <th class="col-sisa sortable" data-col="sisa_hari">
+                  Sisa Waktu <span class="sort-icon"></span>
+                </th>
+                <th class="col-urgensi">Status</th>
+              </tr>
+            </thead>
+            <tbody id="table-body">
+              <!-- diisi oleh JS -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- State containers -->
+        <div id="state-loading" class="state-container">
+          <div class="spinner"></div>
+          <h3>Memuat Data…</h3>
+          <p>Mengambil data dari server, mohon tunggu sebentar.</p>
+        </div>
+
+        <div id="state-empty" class="state-container" style="display:none;">
+          <div class="icon">📋</div>
+          <h3>Tidak Ada Data</h3>
+          <p>Tidak ada pegawai yang memenuhi kriteria filter yang dipilih.</p>
+        </div>
+
+        <div id="state-error" class="state-container" style="display:none;">
+          <div class="icon">⚠️</div>
+          <h3>Gagal Memuat Data</h3>
+          <p id="error-msg">Terjadi kesalahan saat mengambil data. Periksa koneksi atau konfigurasi API.</p>
+        </div>
+
+      </div><!-- /table-wrapper -->
+
+    </div><!-- /container -->
+  </main>
+
+  <!-- ============================================================
+       FOOTER
+       ============================================================ -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-inner">
+        <span>© 2026 DTSL FT UGM &nbsp;·&nbsp; Dashboard KJKP</span>
+        <span>Data bersumber dari Google Spreadsheet via GAS</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ============================================================
+       SCRIPTS
+       ============================================================ -->
+  <script src="js/config.js"></script>
+  <script src="js/api-client.js"></script>
+  <script>
+    (function () {
+      'use strict';
+
+      /* ============================================================
+         STATE
+         ============================================================ */
+      var allData = [];   // seluruh data setelah digabung
+      var filtered = [];   // data setelah filter diterapkan
+      var sortCol = 'sisa_hari';
+      var sortDir = 'asc';
+      var filterKat = 'semua';
+      var filterWaktu = '12';  // default 12 bulan
+      var searchQuery = '';
+
+      /* ============================================================
+         DOM REFERENCES
+         ============================================================ */
+      var elBody = document.getElementById('table-body');
+      var elLoading = document.getElementById('state-loading');
+      var elEmpty = document.getElementById('state-empty');
+      var elError = document.getElementById('state-error');
+      var elErrorMsg = document.getElementById('error-msg');
+      var elRowCount = document.getElementById('row-count');
+      var elUpdated = document.getElementById('last-updated');
+      var elHeaderStat = document.getElementById('header-status');
+
+      /* ============================================================
+         INIT
+         ============================================================ */
+      document.addEventListener('DOMContentLoaded', function () {
+        feather.replace();
+        setupChips();
+        setupSearch();
+        setupSortHeaders();
+        loadData();
+      });
+
+      /* ============================================================
+         DATA LOADING
+         ============================================================ */
+      function loadData() {
+        showState('loading');
+        elHeaderStat.textContent = 'Memuat data…';
+
+        DashboardAPI.getPensiunData()
+          .then(function (data) {
+            // Gabungkan dosen dan tendik
+            var dosen = (data.dosen || []);
+            var tendik = (data.tendik || []);
+            allData = dosen.concat(tendik);
+
+            var now = new Date();
+            elUpdated.textContent = 'Diperbarui: ' + formatDateTime(now);
+            elHeaderStat.textContent = 'Live · ' + allData.length + ' pegawai';
+
+            applyFilters();
+          })
+          .catch(function (err) {
+            console.error('[Dashboard] Gagal memuat:', err);
+            elErrorMsg.textContent = 'Error: ' + err.message;
+            showState('error');
+            elHeaderStat.textContent = 'Gagal memuat data';
+          });
+      }
+
+      /* ============================================================
+         FILTER & SORT
+         ============================================================ */
+      function applyFilters() {
+        var q = searchQuery.toLowerCase();
+
+        filtered = allData.filter(function (r) {
+          // Filter kategori
+          if (filterKat !== 'semua' && r.tipe !== filterKat) return false;
+
+          // Filter waktu
+          if (filterWaktu !== 'semua') {
+            var maxHari = parseInt(filterWaktu) * 30.44;  // perkiraan hari per bulan
+            if (r.sisa_hari < 0) return false; // sudah pensiun, abaikan
+            if (r.sisa_hari > maxHari) return false;
+          }
+
+          // Filter search
+          if (q) {
+            var haystack = [r.nama, r.nip, r.jabatan_fungsional, r.gol, r.inisial, r.homebase]
+              .join(' ').toLowerCase();
+            if (haystack.indexOf(q) === -1) return false;
+          }
+
+          return true;
+        });
+
+        sortData();
+      }
+
+      function sortData() {
+        filtered.sort(function (a, b) {
+          var va, vb;
+
+          if (sortCol === 'jabgol') {
+            va = (a.gol || '') + ' ' + (a.jabatan_fungsional || '');
+            vb = (b.gol || '') + ' ' + (b.jabatan_fungsional || '');
+          } else {
+            va = a[sortCol];
+            vb = b[sortCol];
+          }
+
+          // Numeric sort untuk sisa_hari
+          if (sortCol === 'sisa_hari') {
+            va = Number(va); vb = Number(vb);
+            return sortDir === 'asc' ? va - vb : vb - va;
+          }
+
+          // Date string sort untuk tgl_lahir, tgl_pensiun (dd/mm/yyyy)
+          if (sortCol === 'tgl_lahir' || sortCol === 'tgl_pensiun') {
+            va = parseSortDate(va); vb = parseSortDate(vb);
+            return sortDir === 'asc' ? va - vb : vb - va;
+          }
+
+          // String sort
+          va = String(va || '').toLowerCase();
+          vb = String(vb || '').toLowerCase();
+          if (va < vb) return sortDir === 'asc' ? -1 : 1;
+          if (va > vb) return sortDir === 'asc' ? 1 : -1;
+          return 0;
+        });
+
+        renderTable();
+      }
+
+      /* ============================================================
+         RENDER TABLE
+         ============================================================ */
+      function renderTable() {
+        updateStats();
+        elRowCount.textContent = filtered.length;
+
+        if (filtered.length === 0) {
+          showState('empty');
+          return;
+        }
+
+        showState('table');
+
+        var html = '';
+        filtered.forEach(function (r, idx) {
+          var jabgol = [];
+          if (r.gol) jabgol.push('<strong>' + escHtml(r.gol) + '</strong>');
+          if (r.jabatan_fungsional) jabgol.push(escHtml(r.jabatan_fungsional));
+          var jabgolHtml = jabgol.join('<br>') || '<span class="text-muted">–</span>';
+
+          var urgensiLabel = {
+            merah: '≤ 6 bln',
+            kuning: '≤ 12 bln',
+            oranye: '≤ 24 bln',
+            hijau: '> 24 bln',
+            sudah: 'Purna'
+          }[r.urgensi] || '';
+
+          html += '<tr>' +
+            '<td class="col-no">' + (idx + 1) + '</td>' +
+
+            '<td class="col-nama">' +
+            '<div class="nama-wrap">' +
+            '<div class="nama">' + escHtml(r.nama) + '</div>' +
+            (r.homebase ? '<div class="sub">' + escHtml(r.homebase) + '</div>' : '') +
+            '</div>' +
+            '</td>' +
+
+            '<td class="col-tipe">' +
+            '<span class="badge-tipe ' + r.tipe + '">' + (r.tipe === 'dosen' ? 'Dosen' : 'Tendik') + '</span>' +
+            '</td>' +
+
+            '<td class="col-jabgol text-sm">' + jabgolHtml + '</td>' +
+
+            '<td class="col-nip text-muted">' + escHtml(r.nip || '–') + '</td>' +
+
+            '<td class="col-lahir text-sm text-muted">' + escHtml(r.tgl_lahir || '–') + '</td>' +
+
+            '<td class="col-pensiun text-sm">' + escHtml(r.tgl_pensiun || '–') + '</td>' +
+
+            '<td class="col-sisa">' +
+            '<span class="sisa-waktu ' + r.urgensi + '">' + escHtml(r.sisa_waktu || '–') + '</span>' +
+            '</td>' +
+
+            '<td class="col-urgensi">' +
+            '<span class="badge ' + r.urgensi + '">' +
+            '<span class="badge-dot ' + r.urgensi + '"></span>' +
+            urgensiLabel +
+            '</span>' +
+            '</td>' +
+            '</tr>';
+        });
+
+        elBody.innerHTML = html;
+      }
+
+      /* ============================================================
+         STATS
+         ============================================================ */
+      function updateStats() {
+        var counts = { merah: 0, kuning: 0, oranye: 0, hijau: 0 };
+
+        // Hitung dari seluruh data (bukan filtered) untuk stat global
+        allData.forEach(function (r) {
+          if (counts.hasOwnProperty(r.urgensi)) counts[r.urgensi]++;
+        });
+
+        document.getElementById('stat-merah').textContent = counts.merah;
+        document.getElementById('stat-kuning').textContent = counts.kuning;
+        document.getElementById('stat-oranye').textContent = counts.oranye;
+        document.getElementById('stat-hijau').textContent = counts.hijau;
+        document.getElementById('stat-total').textContent = filtered.length;
+      }
+
+      /* ============================================================
+         UI STATE
+         ============================================================ */
+      function showState(state) {
+        elLoading.style.display = 'none';
+        elEmpty.style.display = 'none';
+        elError.style.display = 'none';
+        elBody.innerHTML = '';
+
+        if (state === 'loading') elLoading.style.display = 'block';
+        if (state === 'empty') elEmpty.style.display = 'block';
+        if (state === 'error') elError.style.display = 'block';
+        // 'table' → body diisi oleh renderTable()
+      }
+
+      /* ============================================================
+         SETUP – CHIPS
+         ============================================================ */
+      function setupChips() {
+        document.querySelectorAll('.chip').forEach(function (btn) {
+          btn.addEventListener('click', function () {
+            var filter = this.dataset.filter;
+            var value = this.dataset.value;
+
+            // Deactivate siblings in same group
+            document.querySelectorAll('.chip[data-filter="' + filter + '"]').forEach(function (c) {
+              c.classList.remove('active');
+            });
+            this.classList.add('active');
+
+            if (filter === 'kategori') filterKat = value;
+            if (filter === 'waktu') filterWaktu = value;
+
+            applyFilters();
+          });
+        });
+      }
+
+      /* ============================================================
+         SETUP – SEARCH
+         ============================================================ */
+      function setupSearch() {
+        var input = document.getElementById('search-input');
+        var timer;
+        input.addEventListener('input', function () {
+          clearTimeout(timer);
+          timer = setTimeout(function () {
+            searchQuery = input.value.trim();
+            applyFilters();
+          }, 250);
+        });
+      }
+
+      /* ============================================================
+         SETUP – SORT HEADERS
+         ============================================================ */
+      function setupSortHeaders() {
+        document.querySelectorAll('th.sortable').forEach(function (th) {
+          th.addEventListener('click', function () {
+            var col = this.dataset.col;
+            if (sortCol === col) {
+              sortDir = sortDir === 'asc' ? 'desc' : 'asc';
+            } else {
+              sortCol = col;
+              sortDir = 'asc';
+            }
+
+            // Update classes
+            document.querySelectorAll('th.sortable').forEach(function (t) {
+              t.classList.remove('sort-asc', 'sort-desc');
+            });
+            this.classList.add(sortDir === 'asc' ? 'sort-asc' : 'sort-desc');
+
+            sortData();
+          });
+        });
+
+        // Set initial sort indicator
+        var defTh = document.querySelector('th[data-col="sisa_hari"]');
+        if (defTh) defTh.classList.add('sort-asc');
+      }
+
+      /* ============================================================
+         UTILITIES
+         ============================================================ */
+      function escHtml(str) {
+        return String(str)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;');
+      }
+
+      function parseSortDate(str) {
+        if (!str) return 0;
+        var parts = str.split('/');
+        if (parts.length === 3) {
+          // dd/mm/yyyy → timestamp
+          return new Date(parseInt(parts[2]), parseInt(parts[1]) - 1, parseInt(parts[0])).getTime();
+        }
+        return 0;
+      }
+
+      function formatDateTime(d) {
+        var dd = String(d.getDate()).padStart(2, '0');
+        var mm = String(d.getMonth() + 1).padStart(2, '0');
+        var yyyy = d.getFullYear();
+        var hh = String(d.getHours()).padStart(2, '0');
+        var min = String(d.getMinutes()).padStart(2, '0');
+        return dd + '/' + mm + '/' + yyyy + ' ' + hh + ':' + min + ' WIB';
+      }
+
+    })();
+  </script>
+
+</body>
+
+</html>
