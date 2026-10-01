@@ -80,7 +80,7 @@
 
   --text-primary: #111827;
   --text-secondary: #4b5563;
-  --text-muted: #9ca3af;
+  --text-muted: #6b7280;
 
   --accent-glow: rgba(59, 130, 246, 0.2);
   --accent-light: rgba(59, 130, 246, 0.1);
@@ -244,6 +244,13 @@ button {
   font-weight: 800;
   letter-spacing: -0.03em;
   background: linear-gradient(135deg, #e6edf3 0%, #8b949e 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+[data-theme="light"] .page-title h2 {
+  background: linear-gradient(135deg, #1e3a5f 0%, #2563eb 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
