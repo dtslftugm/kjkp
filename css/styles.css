@@ -66,6 +66,35 @@
 }
 
 /* ----------------------------------------------------------------
+   LIGHT THEME
+   ---------------------------------------------------------------- */
+[data-theme="light"] {
+  --bg-base: #f0f4f8;
+  --bg-surface: #ffffff;
+  --bg-card: rgba(255, 255, 255, 0.9);
+  --bg-glass: rgba(0, 0, 0, 0.03);
+  --bg-glass-hover: rgba(0, 0, 0, 0.06);
+
+  --border: rgba(0, 0, 0, 0.09);
+  --border-strong: rgba(0, 0, 0, 0.15);
+
+  --text-primary: #111827;
+  --text-secondary: #4b5563;
+  --text-muted: #9ca3af;
+
+  --accent-glow: rgba(59, 130, 246, 0.2);
+  --accent-light: rgba(59, 130, 246, 0.1);
+
+  --merah-bg: rgba(239, 68, 68, 0.1);
+  --kuning-bg: rgba(245, 158, 11, 0.1);
+  --oranye-bg: rgba(249, 115, 22, 0.1);
+  --hijau-bg: rgba(34, 197, 94, 0.1);
+  --sudah-bg: rgba(107, 114, 128, 0.1);
+
+  --shadow-card: 0 2px 16px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+/* ----------------------------------------------------------------
    RESET & BASE
    ---------------------------------------------------------------- */
 *,
@@ -91,6 +120,14 @@ body {
   min-height: 100vh;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
+  transition: background-color 0.3s var(--ease), color 0.3s var(--ease);
+}
+
+[data-theme="light"] body,
+[data-theme="light"].body {
+  background-image:
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(59, 130, 246, 0.07) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 80% 90%, rgba(99, 102, 241, 0.04) 0%, transparent 50%);
 }
 
 a {
@@ -126,6 +163,11 @@ button {
   -webkit-backdrop-filter: blur(16px);
   border-bottom: 1px solid var(--border);
   padding: 14px 0;
+  transition: background 0.3s var(--ease), border-color 0.3s var(--ease);
+}
+
+[data-theme="light"] .site-header {
+  background: rgba(240, 244, 248, 0.88);
 }
 
 .header-inner {
@@ -312,7 +354,11 @@ button {
   padding: 9px 12px 9px 36px;
   font-size: 0.85rem;
   font-family: inherit;
-  transition: border-color var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
+  transition: border-color var(--dur) var(--ease), box-shadow var(--dur) var(--ease), background var(--dur) var(--ease);
+}
+
+[data-theme="light"] .search-input {
+  background: rgba(255, 255, 255, 0.8);
 }
 
 .search-input::placeholder {
@@ -351,6 +397,10 @@ button {
   font-weight: 500;
   transition: all var(--dur) var(--ease);
   white-space: nowrap;
+}
+
+[data-theme="light"] .chip {
+  background: rgba(0, 0, 0, 0.05);
 }
 
 .chip:hover {
@@ -750,6 +800,37 @@ td.col-no {
   height: 8px;
   border-radius: 50%;
   flex-shrink: 0;
+}
+
+/* ----------------------------------------------------------------
+   THEME TOGGLE BUTTON
+   ---------------------------------------------------------------- */
+.theme-toggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--bg-glass);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  color: var(--text-secondary);
+  padding: 5px 12px 5px 8px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--dur) var(--ease);
+  white-space: nowrap;
+  margin-left: 10px;
+}
+
+.theme-toggle:hover {
+  background: var(--bg-glass-hover);
+  border-color: var(--border-strong);
+  color: var(--text-primary);
+}
+
+.theme-toggle .theme-icon {
+  font-size: 0.95rem;
+  line-height: 1;
 }
 
 /* ----------------------------------------------------------------

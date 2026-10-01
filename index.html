@@ -13,6 +13,14 @@
 
   <!-- Feather Icons (CDN) -->
   <script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
+
+  <!-- Inisialisasi tema SEBELUM render untuk menghindari flash -->
+  <script>
+    (function () {
+      var t = localStorage.getItem('kjkp-theme') || 'dark';
+      document.documentElement.setAttribute('data-theme', t);
+    })();
+  </script>
 </head>
 
 <body>
@@ -33,6 +41,11 @@
           <span class="dot"></span>
           <span id="header-status">Memuat data…</span>
         </div>
+        <!-- Theme Toggle -->
+        <button class="theme-toggle" id="theme-toggle" title="Ganti tema">
+          <span class="theme-icon" id="theme-icon">🌙</span>
+          <span id="theme-label">Dark</span>
+        </button>
       </div>
     </div>
   </header>
@@ -225,11 +238,42 @@
          ============================================================ */
       document.addEventListener('DOMContentLoaded', function () {
         feather.replace();
+        setupTheme();
         setupChips();
         setupSearch();
         setupSortHeaders();
         loadData();
       });
+
+      /* ============================================================
+         THEME
+         ============================================================ */
+      function setupTheme() {
+        var btn = document.getElementById('theme-toggle');
+        var icon = document.getElementById('theme-icon');
+        var label = document.getElementById('theme-label');
+
+        function applyTheme(t) {
+          document.documentElement.setAttribute('data-theme', t);
+          localStorage.setItem('kjkp-theme', t);
+          if (t === 'light') {
+            icon.textContent = '☀️';
+            label.textContent = 'Light';
+          } else {
+            icon.textContent = '🌙';
+            label.textContent = 'Dark';
+          }
+        }
+
+        // Sinkronkan label dengan tema yang sudah diinisialisasi
+        var current = document.documentElement.getAttribute('data-theme') || 'dark';
+        applyTheme(current);
+
+        btn.addEventListener('click', function () {
+          var next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+          applyTheme(next);
+        });
+      }
 
       /* ============================================================
          DATA LOADING
