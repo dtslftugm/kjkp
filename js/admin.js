@@ -765,7 +765,7 @@
       html += '<tr>' +
         '<td class="col-no text-muted">' + (idx + 1) + '</td>' +
         '<td class="col-nama"><strong>' + escHtml(r.nama) + '</strong>' +
-          '<div class="text-xs text-muted" style="margin-top:2px;">' + escHtml(r.jabatan_fungsional || r.homebase || '–') + '</div>' +
+        '<div class="text-xs text-muted" style="margin-top:2px;">' + escHtml(r.jabatan_fungsional || r.homebase || '–') + '</div>' +
         '</td>' +
         '<td class="col-tipe"><span class="badge-tipe ' + r.tipe + '">' + (r.tipe === 'dosen' ? 'Dosen' : 'Tendik') + '</span></td>' +
         '<td>' + statusBadge + '<div class="text-xs text-muted" style="margin-top:3px; font-family:monospace;">' + escHtml(r.nip || '–') + '</div></td>' +
