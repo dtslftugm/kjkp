@@ -1,5 +1,5 @@
 /**
- * Dashboard KJKP DTSL – API Client
+ * Dashboard Kepegawaian DTSL – API Client
  * Wrapper untuk komunikasi dengan GAS backend.
  *
  * Strategi CORS:

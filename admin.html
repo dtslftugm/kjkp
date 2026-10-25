@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard Kepegawaian – DTSL FT UGM</title>
+  <meta name="description"
+    content="Dashboard pemantauan staf Dosen dan Tendik yang akan segera pensiun – DTSL FT UGM" />
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/styles.css" />
+
+  <!-- Feather Icons (CDN) -->
+  <script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
+
+  <!-- Inisialisasi tema SEBELUM render untuk menghindari flash -->
+  <script>
+    (function () {
+      var t = localStorage.getItem('kjkp-theme') || 'dark';
+      document.documentElement.setAttribute('data-theme', t);
+    })();
+  </script>
+</head>
+
+<body>
+
+  <!-- ============================================================
+       LOGIN OVERLAY
+       ============================================================ -->
+  <div class="login-overlay" id="login-overlay" style="display:none;">
+    <div class="login-card">
+      <div class="login-logo">🏛️</div>
+      <h2>Dashboard Admin Kepegawaian DTSL</h2>
+      <p>Masukkan kata sandi untuk mengakses data internal</p>
+      <form class="login-form" id="login-form">
+        <input type="password" id="login-password" class="login-input" placeholder="Kata sandi"
+          autocomplete="current-password" autofocus />
+        <p class="login-error" id="login-error"></p>
+        <button type="submit" class="login-btn">Masuk</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="app-layout">
+
+    <!-- ============================================================
+         SIDEBAR
+         ============================================================ -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <h2>HRD DTSL</h2>
+        <button id="sidebar-close" class="sidebar-toggle" style="margin:0;" title="Menu">
+          <span data-feather="menu"></span>
+        </button>
+      </div>
+      <ul class="sidebar-nav">
+        <li>
+          <a href="index.html">
+            <span data-feather="grid" class="icon"></span>
+            <span>Dashboard Publik</span>
+          </a>
+        </li>
+        <li>
+          <a href="#pensiun" id="nav-pensiun" class="active">
+            <span data-feather="users" class="icon"></span>
+            <span>Data Pensiun</span>
+          </a>
+        </li>
+        <li>
+          <a href="#penghargaan" id="nav-penghargaan">
+            <span data-feather="award" class="icon"></span>
+            <span>Penghargaan</span>
+          </a>
+        </li>
+      </ul>
+      <div class="sidebar-footer">
+        <button class="btn-sidebar-logout" id="btn-logout" title="Logout">
+          <span data-feather="log-out" class="icon"></span>
+          <span>Logout</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- ============================================================
+         MAIN CONTENT WRAPPER
+         ============================================================ -->
+    <div class="main-content-wrapper">
+
+      <!-- ============================================================
+           HEADER
+           ============================================================ -->
+      <header class="site-header">
+        <div class="container">
+          <div class="header-inner">
+            <button id="sidebar-toggle" class="sidebar-toggle" title="Menu">
+              <span data-feather="menu"></span>
+            </button>
+            <img src="assets/logo-dtsl.png" alt="Logo DTSL FT UGM" class="header-logo"
+              onerror="this.style.display='none'" />
+            <div class="header-text">
+              <h1>Dashboard Kepegawaian DTSL</h1>
+              <p>Departemen Teknik Sipil dan Lingkungan – Fakultas Teknik UGM</p>
+            </div>
+            <div class="header-badge">
+              <span class="dot"></span>
+              <span id="header-status">Memuat data…</span>
+            </div>
+            <!-- Theme Toggle -->
+            <button class="theme-toggle" id="theme-toggle" title="Ganti tema">
+              <span class="theme-icon" id="theme-icon">🌙</span>
+              <span id="theme-label">Dark</span>
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <!-- ============================================================
+       MAIN
+       ============================================================ -->
+      <main class="main-content">
+        <div class="container">
+
+          <!-- ============================================================
+               VIEW: DATA PENSIUN & DEMOGRAFI
+               ============================================================ -->
+          <div id="view-pensiun" class="tab-view">
+
+            <!-- Demografi Pegawai Section -->
+            <div class="section-header"
+              style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;">
+              <h3
+                style="font-size:1.125rem; font-weight:700; color:var(--text-primary); display:flex; align-items:center; gap:8px;">
+                <span data-feather="pie-chart" style="width:18px; height:18px; color:var(--accent);"></span>
+                Demografi Pegawai
+              </h3>
+              <span class="badge"
+                style="background:var(--bg-glass); border:1px solid var(--border); color:var(--text-secondary); font-size:0.75rem;">
+                DTSL FT UGM
+              </span>
+            </div>
+            <div class="stats-grid" id="demografi-grid" style="margin-bottom:32px;">
+              <div class="stat-card" style="border-left: 4px solid var(--accent);">
+                <div class="label">Total Pegawai</div>
+                <div class="value" id="stat-total-pegawai">–</div>
+              </div>
+              <div class="stat-card">
+                <div class="label">Total Dosen</div>
+                <div class="value" id="stat-total-dosen">–</div>
+              </div>
+              <div class="stat-card">
+                <div class="label">Total Tendik</div>
+                <div class="value" id="stat-total-tendik">–</div>
+              </div>
+              <div class="stat-card">
+                <div class="label">Guru Besar</div>
+                <div class="value" id="stat-guru-besar">–</div>
+              </div>
+              <div class="stat-card">
+                <div class="label">Doktor (S3)</div>
+                <div class="value" id="stat-doktor">–</div>
+              </div>
+            </div>
+
+            <!-- Page title -->
+            <div class="page-title">
+              <h2>Informasi Pensiun</h2>
+              <p>Daftar Dosen dan Tenaga Kependidikan yang akan memasuki masa pensiun</p>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="stats-grid" id="stats-grid">
+              <div class="stat-card merah">
+                <div class="label">≤ 6 Bulan</div>
+                <div class="value" id="stat-merah">–</div>
+              </div>
+              <div class="stat-card kuning">
+                <div class="label">≤ 12 Bulan</div>
+                <div class="value" id="stat-kuning">–</div>
+              </div>
+              <div class="stat-card oranye">
+                <div class="label">≤ 24 Bulan</div>
+                <div class="value" id="stat-oranye">–</div>
+              </div>
+              <div class="stat-card hijau">
+                <div class="label">> 24 Bulan</div>
+                <div class="value" id="stat-hijau">–</div>
+              </div>
+              <div class="stat-card total">
+                <div class="label">Total Ditampilkan</div>
+                <div class="value" id="stat-total">–</div>
+              </div>
+            </div>
+
+            <!-- Filter Bar -->
+            <div class="filter-bar">
+
+              <!-- Search -->
+              <div class="search-wrap">
+                <span class="icon" data-feather="search"></span>
+                <input type="text" id="search-input" class="search-input" placeholder="Cari nama, NIP, jabatan…"
+                  autocomplete="off" />
+              </div>
+
+              <!-- Filter Kategori -->
+              <div class="chip-group">
+                <span class="chip-label">Kategori</span>
+                <button class="chip active" data-filter="kategori" data-value="semua">Semua</button>
+                <button class="chip" data-filter="kategori" data-value="dosen">Dosen</button>
+                <button class="chip" data-filter="kategori" data-value="tendik">Tendik</button>
+              </div>
+
+              <!-- Filter Rentang Waktu -->
+              <div class="chip-group">
+                <span class="chip-label">Sisa Waktu</span>
+                <button class="chip" data-filter="waktu" data-value="semua">Semua</button>
+                <button class="chip" data-filter="waktu" data-value="6">≤ 6 bln</button>
+                <button class="chip active" data-filter="waktu" data-value="12">≤ 12 bln</button>
+                <button class="chip" data-filter="waktu" data-value="24">≤ 24 bln</button>
+              </div>
+
+            </div>
+
+            <!-- Keterangan Warna -->
+            <div class="legend" style="margin-bottom:14px;">
+              <span style="font-size:0.72rem; color:var(--text-muted); font-weight:500;">Keterangan:</span>
+              <span class="legend-item"><span class="legend-dot" style="background:var(--merah)"></span> ≤ 6
+                bulan</span>
+              <span class="legend-item"><span class="legend-dot" style="background:var(--kuning)"></span> ≤ 12
+                bulan</span>
+              <span class="legend-item"><span class="legend-dot" style="background:var(--oranye)"></span> ≤ 24
+                bulan</span>
+              <span class="legend-item"><span class="legend-dot" style="background:var(--hijau)"></span> > 24
+                bulan</span>
+            </div>
+
+            <!-- Tabel -->
+            <div class="table-wrapper">
+              <div class="table-meta">
+                <span class="count">Menampilkan <strong id="row-count">0</strong> data</span>
+                <span id="last-updated"></span>
+              </div>
+              <div class="table-scroll">
+                <table id="main-table">
+                  <thead>
+                    <tr>
+                      <th class="col-no">#</th>
+                      <th class="col-nama sortable" data-col="nama">
+                        Nama <span class="sort-icon"></span>
+                      </th>
+                      <th class="col-tipe sortable" data-col="tipe">
+                        Tipe <span class="sort-icon"></span>
+                      </th>
+                      <th class="col-jabgol sortable" data-col="jabgol">
+                        Gol / Jabatan <span class="sort-icon"></span>
+                      </th>
+                      <th class="col-nip sortable" data-col="nip">
+                        NIP <span class="sort-icon"></span>
+                      </th>
+                      <th class="col-lahir sortable" data-col="tgl_lahir">
+                        Tgl Lahir <span class="sort-icon"></span>
+                      </th>
+                      <th class="col-pensiun sortable" data-col="tgl_pensiun">
+                        Tgl Pensiun <span class="sort-icon"></span>
+                      </th>
+                      <th class="col-sisa sortable" data-col="sisa_hari">
+                        Sisa Waktu <span class="sort-icon"></span>
+                      </th>
+                      <th class="col-urgensi">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody id="table-body">
+                    <!-- diisi oleh JS -->
+                  </tbody>
+                </table>
+              </div>
+
+              <!-- State containers -->
+              <div id="state-loading" class="state-container">
+                <div class="spinner"></div>
+                <h3>Memuat Data…</h3>
+                <p>Mengambil data dari server, mohon tunggu sebentar.</p>
+              </div>
+
+              <div id="state-empty" class="state-container" style="display:none;">
+                <div class="icon">📋</div>
+                <h3>Tidak Ada Data</h3>
+                <p>Tidak ada pegawai yang memenuhi kriteria filter yang dipilih.</p>
+              </div>
+
+              <div id="state-error" class="state-container" style="display:none;">
+                <div class="icon">⚠️</div>
+                <h3>Gagal Memuat Data</h3>
+                <p id="error-msg">Terjadi kesalahan saat mengambil data. Periksa koneksi atau konfigurasi API.</p>
+              </div>
+
+            </div><!-- /table-wrapper -->
+          </div><!-- /view-pensiun -->
+
+          <!-- ============================================================
+               VIEW: PENGHARGAAN KESETIAAN & SATYALANCANA
+               ============================================================ -->
+          <div id="view-penghargaan" class="tab-view" style="display:none;">
+
+            <!-- Page title -->
+            <div class="page-title">
+              <h2>Penghargaan Pegawai</h2>
+              <p>Daftar Penerima & Kelayakan Penghargaan Kesetiaan UGM (15, 25, 35 Tahun) dan Satyalancana Karya Satya
+                (10, 20, 30 Tahun Khusus PNS)</p>
+            </div>
+
+            <!-- Summary Stats Penghargaan -->
+            <div class="section-header" style="margin-bottom:12px;">
+              <h3
+                style="font-size:0.875rem; font-weight:700; color:var(--text-secondary); text-transform:uppercase; letter-spacing:0.05em;">
+                Ringkasan Penerima Penghargaan
+              </h3>
+            </div>
+            <div class="stats-grid" style="margin-bottom:28px;">
+              <div class="stat-card" style="border-left: 4px solid #f59e0b;">
+                <div class="label">Kesetiaan 35 Th</div>
+                <div class="value" id="stat-ugm-35" style="color: #fbbf24;">–</div>
+              </div>
+              <div class="stat-card" style="border-left: 4px solid #94a3b8;">
+                <div class="label">Kesetiaan 25 Th</div>
+                <div class="value" id="stat-ugm-25" style="color: #cbd5e1;">–</div>
+              </div>
+              <div class="stat-card" style="border-left: 4px solid #d97706;">
+                <div class="label">Kesetiaan 15 Th</div>
+                <div class="value" id="stat-ugm-15" style="color: #f59e0b;">–</div>
+              </div>
+              <div class="stat-card" style="border-left: 4px solid #f59e0b;">
+                <div class="label">Satyalancana 30 Th</div>
+                <div class="value" id="stat-satya-30" style="color: #fbbf24;">–</div>
+              </div>
+              <div class="stat-card" style="border-left: 4px solid #94a3b8;">
+                <div class="label">Satyalancana 20 Th</div>
+                <div class="value" id="stat-satya-20" style="color: #cbd5e1;">–</div>
+              </div>
+              <div class="stat-card" style="border-left: 4px solid #d97706;">
+                <div class="label">Satyalancana 10 Th</div>
+                <div class="value" id="stat-satya-10" style="color: #f59e0b;">–</div>
+              </div>
+            </div>
+
+            <!-- Filter Bar Penghargaan -->
+            <div class="filter-bar">
+              <!-- Search -->
+              <div class="search-wrap">
+                <span class="icon" data-feather="search"></span>
+                <input type="text" id="search-penghargaan" class="search-input" placeholder="Cari nama, NIP, jabatan…"
+                  autocomplete="off" />
+              </div>
+
+              <!-- Filter Jenis Penghargaan -->
+              <div class="chip-group">
+                <span class="chip-label">Penghargaan</span>
+                <button class="chip active" data-filter="penghargaan-jenis" data-value="semua">Semua</button>
+                <button class="chip" data-filter="penghargaan-jenis" data-value="ugm">Kesetiaan UGM</button>
+                <button class="chip" data-filter="penghargaan-jenis" data-value="satya">Satyalancana (PNS)</button>
+                <button class="chip" data-filter="penghargaan-jenis" data-value="berhak">Hanya Yang Berhak</button>
+              </div>
+
+              <!-- Filter Masa Kerja -->
+              <div class="chip-group">
+                <span class="chip-label">Masa Kerja</span>
+                <button class="chip active" data-filter="penghargaan-mk" data-value="semua">Semua</button>
+                <button class="chip" data-filter="penghargaan-mk" data-value="35">≥ 35 Th</button>
+                <button class="chip" data-filter="penghargaan-mk" data-value="25">≥ 25 Th</button>
+                <button class="chip" data-filter="penghargaan-mk" data-value="15">≥ 15 Th</button>
+                <button class="chip" data-filter="penghargaan-mk" data-value="10">≥ 10 Th</button>
+              </div>
+
+              <!-- Filter Kategori Pegawai -->
+              <div class="chip-group">
+                <span class="chip-label">Kategori Pegawai</span>
+                <button class="chip active" data-filter="penghargaan-tipe" data-value="semua">Semua</button>
+                <button class="chip" data-filter="penghargaan-tipe" data-value="dosen">Dosen</button>
+                <button class="chip" data-filter="penghargaan-tipe" data-value="tendik">Tendik</button>
+                <button class="chip" data-filter="penghargaan-tipe" data-value="pns">PNS Only</button>
+              </div>
+            </div>
+
+            <!-- Table Container Penghargaan -->
+            <div class="table-wrapper">
+              <div class="table-meta">
+                <span class="count">Menampilkan <strong id="row-count-penghargaan">0</strong> pegawai</span>
+              </div>
+              <div class="table-scroll">
+                <table id="table-penghargaan">
+                  <thead>
+                    <tr>
+                      <th class="col-no">#</th>
+                      <th class="col-nama sortable" data-pcol="nama">Nama <span class="sort-icon"></span></th>
+                      <th class="col-tipe sortable" data-pcol="tipe">Tipe <span class="sort-icon"></span></th>
+                      <th>Status / NIP</th>
+                      <th class="sortable" data-pcol="tmt">TMT <span class="sort-icon"></span></th>
+                      <th class="sortable" data-pcol="masa_kerja">Masa Kerja <span class="sort-icon"></span></th>
+                      <th>Kesetiaan UGM</th>
+                      <th>Satyalancana (PNS)</th>
+                    </tr>
+                  </thead>
+                  <tbody id="table-body-penghargaan">
+                    <!-- diisi oleh JS -->
+                  </tbody>
+                </table>
+              </div>
+
+              <!-- Empty state untuk penghargaan -->
+              <div id="state-empty-penghargaan" class="state-container" style="display:none;">
+                <div class="icon">🏅</div>
+                <h3>Tidak Ada Data Penghargaan</h3>
+                <p>Tidak ada pegawai yang memenuhi kriteria pencarian atau filter yang dipilih.</p>
+              </div>
+            </div><!-- /table-wrapper -->
+
+          </div><!-- /view-penghargaan -->
+
+        </div><!-- /container -->
+      </main>
+
+    </div><!-- /main-content-wrapper -->
+  </div><!-- /app-layout -->
+
+  <!-- ============================================================
+       FOOTER (Digeser ke dalam page if needed, tapi diletakkan di main wrapper)
+       ============================================================ -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-inner">
+        <span>© 2026 DTSL FT UGM &nbsp;·&nbsp; Dashboard Kepegawaian</span>
+        <span>Data bersumber dari Google Spreadsheet via GAS</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ============================================================
+       SCRIPTS
+       ============================================================ -->
+  <script src="js/config.js"></script>
+  <script src="js/api-client.js"></script>
+  <script src="js/admin.js"></script>
+
+</body>
+
+</html>
