@@ -61,7 +61,7 @@
         var tendik = data.tendik || [];
         allData = dosen.concat(tendik);
 
-        elHeaderStat.textContent = 'Live · ' + allData.length + ' pegawai';
+        elHeaderStat.textContent = 'Cached · ' + allData.length + ' data';
 
         updateStats();
         updateDemografi(dosen, tendik);
