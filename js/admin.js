@@ -231,7 +231,7 @@
 
         var now = new Date();
         if (elUpdated) elUpdated.textContent = 'Diperbarui: ' + formatDateTime(now);
-        elHeaderStat.textContent = 'Live · ' + allData.length + ' pegawai';
+        elHeaderStat.textContent = 'Cached · ' + allData.length + ' data';
 
         // Proses data untuk Penghargaan & Demografi
         allData.forEach(function (r) {
