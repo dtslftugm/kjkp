@@ -238,13 +238,15 @@
           var isPNS = String(r.nip || '').startsWith('19') && String(r.nip || '').length === 18;
           r.isPNS = isPNS;
 
+          // ── Masa Kerja dari TGL SK CPNS ──────────────────────────────────
+          // Digunakan untuk: Satyalancana Karya Satya (khusus PNS)
           r.tmtDate = parseDMY(r.tgl_sk_cpns);
           if (r.tmtDate) {
-            var mk = calcMasaKerja(r.tmtDate, now);
-            r.mkTahun = mk.tahun;
-            r.mkBulan = mk.bulan;
-            r.mkLabel = mk.label;
-            r.mkTotal = mk.totalTahunDesimal;
+            var mkCpns = calcMasaKerja(r.tmtDate, now);
+            r.mkTahun = mkCpns.tahun;
+            r.mkBulan = mkCpns.bulan;
+            r.mkLabel = mkCpns.label;
+            r.mkTotal = mkCpns.totalTahunDesimal;
           } else {
             r.mkTahun = 0;
             r.mkBulan = 0;
@@ -252,18 +254,41 @@
             r.mkTotal = 0;
           }
 
+          // ── Masa Kerja dari TGL SK UGM ───────────────────────────────────
+          // Digunakan untuk: Penghargaan Kesetiaan UGM (PNS & Dosen/Tendik Tetap)
+          r.tmtUGMDate = parseDMY(r.tgl_sk_ugm);
+          var mkUGMTahun, mkUGMBulan, mkUGMLabel, mkUGMTotal;
+          if (r.tmtUGMDate) {
+            var mkUGM = calcMasaKerja(r.tmtUGMDate, now);
+            mkUGMTahun = mkUGM.tahun;
+            mkUGMBulan = mkUGM.bulan;
+            mkUGMLabel = mkUGM.label;
+            mkUGMTotal = mkUGM.totalTahunDesimal;
+          } else {
+            mkUGMTahun = 0;
+            mkUGMBulan = 0;
+            mkUGMLabel = '–';
+            mkUGMTotal = 0;
+          }
+          r.mkUGMTahun = mkUGMTahun;
+          r.mkUGMBulan = mkUGMBulan;
+          r.mkUGMLabel = mkUGMLabel;
+          r.mkUGMTotal = mkUGMTotal;
+
           // Kelayakan Kesetiaan UGM: 15, 25, 35 Tahun (PNS & Dosen/Tendik Tetap)
-          if (r.mkTahun >= 35) {
+          // Dihitung dari TGL SK UGM
+          if (mkUGMTahun >= 35) {
             r.awardUGM = { level: 35, tier: 'gold', label: 'Kesetiaan 35 Th' };
-          } else if (r.mkTahun >= 25) {
+          } else if (mkUGMTahun >= 25) {
             r.awardUGM = { level: 25, tier: 'silver', label: 'Kesetiaan 25 Th' };
-          } else if (r.mkTahun >= 15) {
+          } else if (mkUGMTahun >= 15) {
             r.awardUGM = { level: 15, tier: 'bronze', label: 'Kesetiaan 15 Th' };
           } else {
-            r.awardUGM = { level: 0, tier: 'none', label: r.tmtDate ? 'Belum (' + r.mkTahun + ' Th)' : '–' };
+            r.awardUGM = { level: 0, tier: 'none', label: r.tmtUGMDate ? 'Belum (' + mkUGMTahun + ' Th)' : '–' };
           }
 
           // Kelayakan Satyalancana Karya Satya: 10, 20, 30 Tahun (Khusus PNS)
+          // Dihitung dari TGL SK CPNS
           if (!isPNS) {
             r.awardSatya = { level: -1, tier: 'ineligible', label: 'Non-PNS' };
           } else if (r.mkTahun >= 30) {
@@ -685,13 +710,14 @@
         if (!hasUGM && !hasSatya) return false;
       }
 
-      // Filter Masa Kerja
+      // Filter Masa Kerja — menggunakan masa kerja UGM untuk filter UGM,
+      // dan masa kerja CPNS untuk filter Satyalancana
       if (filterPenghargaanMk === '35') {
-        if (r.mkTahun < 35) return false;
+        if (r.mkUGMTahun < 35) return false;
       } else if (filterPenghargaanMk === '25') {
-        if (r.mkTahun < 25) return false;
+        if (r.mkUGMTahun < 25) return false;
       } else if (filterPenghargaanMk === '15') {
-        if (r.mkTahun < 15) return false;
+        if (r.mkUGMTahun < 15) return false;
       } else if (filterPenghargaanMk === '10') {
         if (r.mkTahun < 10) return false;
       }
@@ -717,13 +743,13 @@
     filteredPenghargaan.sort(function (a, b) {
       var va, vb;
       if (sortPenghargaanCol === 'masa_kerja') {
-        va = a.mkTotal || 0;
-        vb = b.mkTotal || 0;
+        va = a.mkUGMTotal || 0;
+        vb = b.mkUGMTotal || 0;
         return sortPenghargaanDir === 'asc' ? va - vb : vb - va;
       }
       if (sortPenghargaanCol === 'tmt') {
-        va = a.tmtDate ? a.tmtDate.getTime() : 0;
-        vb = b.tmtDate ? b.tmtDate.getTime() : 0;
+        va = a.tmtUGMDate ? a.tmtUGMDate.getTime() : 0;
+        vb = b.tmtUGMDate ? b.tmtUGMDate.getTime() : 0;
         return sortPenghargaanDir === 'asc' ? va - vb : vb - va;
       }
       va = String(a[sortPenghargaanCol] || '').toLowerCase();
@@ -769,8 +795,8 @@
         '</td>' +
         '<td class="col-tipe"><span class="badge-tipe ' + r.tipe + '">' + (r.tipe === 'dosen' ? 'Dosen' : 'Tendik') + '</span></td>' +
         '<td>' + statusBadge + '<div class="text-xs text-muted" style="margin-top:3px; font-family:monospace;">' + escHtml(r.nip || '–') + '</div></td>' +
-        '<td class="text-sm">' + escHtml(r.tgl_sk_cpns || '–') + '</td>' +
-        '<td class="text-sm"><strong>' + escHtml(r.mkLabel) + '</strong></td>' +
+        '<td class="text-sm">' + escHtml(r.tgl_sk_ugm || '–') + '</td>' +
+        '<td class="text-sm"><strong>' + escHtml(r.mkUGMLabel) + '</strong></td>' +
         '<td>' + ugmBadge + '</td>' +
         '<td>' + satyaBadge + '</td>' +
         '</tr>';
